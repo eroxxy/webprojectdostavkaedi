@@ -1,0 +1,88 @@
+{% extends 'orders/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container text-center my-4">
+  <h2>Logged in as {{ user.username }}</h2>
+  <a href="{% url 'logout' %}">Logout</a>
+  <h2 class="display-4">Orders admin panel</h2>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm">
+      <li class="list-group-item active">New orders:</li>
+      {% for key, items in checkout.items  %}
+      {% for id, user, item in items %}
+      {% if item.status == 'Ordered'  %}
+      <form class="flex-column" method="post" action="{% url 'order_status' %}">
+        {% csrf_token %}
+        <input type="hidden" name="food_type" value="{{ key }}">
+        <input type="hidden" name="id" value="{{ id }}">
+        <ul class="list-group">
+          <li style="display: flex;" class="list-group-item flex-row justify-content-between">
+            <p class="w-50 m-2">
+              {{key}}: {{item}} <br> ordered by: {{ user }} <br> in: {{ item.date|date:"d/m/Y G:i" }}
+            </p>
+            <button type="submit" name="admin_form" class="btn btn-primary">
+              Get in process
+            </button>
+          </li>
+        </ul>
+      </form>
+      {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="col-sm">
+      <li class="list-group-item active">Orders in processing:</li>
+      {% for id, user, item in items %}
+      {% if item.status == 'Processing'  %}
+      <form class="flex-column" method="post" action="{% url 'order_status' %}">
+        {% csrf_token %}
+        <input type="hidden" name="food_type" value="{{ key }}">
+        <input type="hidden" name="id" value="{{ id }}">
+        <ul class="list-group">
+          <li style="display: flex;" class="list-group-item flex-row justify-content-between">
+            <p class="w-50 m-2">
+              {{key}}: {{item}} <br> ordered by: {{ user }} <br> in: {{ item.date|date:"d/m/Y G:i" }}
+            </p>
+            <button type="submit" name="admin_form" class="btn btn-primary">
+              Mark sent
+            </button>
+          </li>
+        </ul>
+      </form>
+      {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="col-sm">
+      <li class="list-group-item active">Sent orders:</li>
+      {% for id, user, item in items %}
+      {% if item.status == 'Sent'  %}
+      <form class="flex-column" method="post" action="{% url 'order_status' %}">
+        {% csrf_token %}
+        <input type="hidden" name="food_type" value="{{ key }}">
+        <input type="hidden" name="id" value="{{ id }}">
+        <ul class="list-group">
+          <li style="display: flex;" class="list-group-item flex-row justify-content-between">
+            <p class="w-50 m-2">
+              {{key}}: {{item}} <br> ordered by: {{ user }} <br> in: {{ item.date|date:"d/m/Y G:i" }}
+            </p>
+            <button type="submit" name="admin_form" class="btn btn-primary">
+              Mark complete
+            </button>
+          </li>
+        </ul>
+      </form>
+      {% endif %}
+
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}
