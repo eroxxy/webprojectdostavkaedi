@@ -9,6 +9,7 @@ class PizzaOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = PizzaOrderApi
         fields = (
+            "id",
             "foodsize",
             "extra_toppings",
             "food_type",
